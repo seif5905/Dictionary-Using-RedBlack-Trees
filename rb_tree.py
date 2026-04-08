@@ -44,13 +44,17 @@ def fix_insert(root: Node, node: Node) -> Node:
 
             else:
                 if p.l_child == node:
+                    p.color = "black"
+                    gp.color = "red"
                     root = rotate_r(root, gp)
                 elif p.r_child == node:
-                    root = rotate_l(root, p)
+                    node = p
+                    root = rotate_l(root, node)
+                    p = node.parent
+                    gp = p.parent
+                    p.color = "black"
+                    gp.color = "red"
                     root = rotate_r(root, gp)
-
-                root.color = "black"
-                gp.color = "red"
                 break
 
         else: # if parent is right child of grandparent
@@ -64,37 +68,69 @@ def fix_insert(root: Node, node: Node) -> Node:
 
             else:
                 if p.l_child == node:
-                    root = rotate_r(root, p)
+                    node = p
+                    root = rotate_r(root, node)
+                    p = node.parent
+                    gp = p.parent
+                    p.color = "black"
+                    gp.color = "red"
                     root = rotate_l(root, gp)
                 elif p.r_child == node:
+                    p.color = "black"
+                    gp.color = "red"
                     root = rotate_l(root, gp)
-                
-                root.color = "black"
-                gp.color = "red"
                 break
 
     root.color = "black"
     return root
 
 def rotate_l(root: Node, x: Node) -> Node:
-    
     y = x.r_child
-    y.l_child = x.r_child
-    x.r_child.parent = y.l_child
-    y.parent = x.parent
-    gp = x.parent
-    if gp.l_child == x.parent:
-        gp.l_child = y
-    else:
-        gp.r_child = y
-    y.l_child = x
-    x.parent = y
+    if y == None:
+        return root
+    x.r_child = y.l_child
+    if y.l_child != None:
+        y.l_child.parent = x
+
     
-    return y
+    y.parent = x.parent
+    if x.parent != None:
+        if x == x.parent.l_child:
+            x.parent.l_child = y
+        elif x == x.parent.r_child:
+            x.parent.r_child = y
+    else:
+        root = y
+
+    x.parent = y
+    y.l_child = x
+
+    return root
     
 
 def rotate_r(root: Node, x: Node) -> Node:
-    pass
+    y = x.l_child
+    if y == None:
+        return root
+    x.l_child = y.r_child
+    if y.r_child != None:
+        y.r_child.parent = x
+
+    
+    y.parent = x.parent
+    if x.parent != None:
+        if x == x.parent.r_child:
+            x.parent.r_child = y
+        elif x == x.parent.l_child:
+            x.parent.l_child = y
+    else:
+        root = y
+
+    x.parent = y
+    y.r_child = x
+    
+
+    return root
 
 def search(root: Node, data) -> Node | None:
     current = root

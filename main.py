@@ -29,6 +29,12 @@ def main():
                         if word:
                             root = insert(root, word)
                 print("Dictionary loaded successfully!")
+
+                if root:
+                    print("Size:", get_size(root))
+                    print("Height:", get_height(root))
+                    print("Black Height:", get_black_height(root))
+                    
             except FileNotFoundError:
                 print("dictionary.txt not found. Starting with empty dictionary.")
             except Exception:
